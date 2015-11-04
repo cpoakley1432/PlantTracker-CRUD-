@@ -11,10 +11,37 @@ import java.util.HashMap;
 
 public class Main {
 
-    static void insertPlant (Connection conn , String type , String subtype) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("INSER INTO plants VALUES (NULL , ? , ?");
-        stmt.setString(1, type);
-        stmt.setString(2, subtype);
+    public static void createTables (Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY , name VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS plants (id IDENTITY , user_id INT , type VARCHAR , subtype VARCHAR , maturity INT )");
+    }
+
+    static void insertUser (Connection conn , String name) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO users VALUES (NULL , ?) ");
+        stmt.setString(1, name);
+        stmt.execute();
+    }
+
+    public static User selectUser(Connection conn , String name) throws SQLException {
+        User user = null;
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
+        stmt.setString(1, name);
+        ResultSet results = stmt.executeQuery();
+        if (results.next()){
+            user = new User();
+            user.id = results.getInt("id");
+        }
+        return user;
+    }
+
+
+    static void insertPlant (Connection conn , int userid , String type , String subtype , int maturity) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO plants VALUES (NULL , ? , ? , ? , ?)");
+        stmt.setInt(1, userid);
+        stmt.setString(2, type);
+        stmt.setString(3, subtype);
+        stmt.setInt(4,maturity);
         stmt.execute();
     }
 
@@ -26,13 +53,14 @@ public class Main {
 
     static ArrayList<Plant> selectPlants (Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet results = stmt.executeQuery("SELECT * FROM plants");
+        ResultSet results = stmt.executeQuery("SELECT * FROM plants INNER JOIN users on plants.user_id = users.id");
         ArrayList<Plant> plants = new ArrayList();
         while (results.next()){
             Plant plant = new Plant();
             plant.id = results.getInt("id");
             plant.type = results.getString("type");
             plant.subtype = results.getString("subtype");
+            plant.maturity = results.getInt("maturity");
             plants.add(plant);
         }
         return plants;
@@ -48,8 +76,8 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:h2:./main");
+        createTables(conn);
         Statement stmt = conn.createStatement();
-        stmt. execute("CREATE TABLE IF NOT EXISTS beers(id IDENTITY , name VARCHAR , type VARCHAR)");
 
 
         Spark.get(
@@ -75,6 +103,10 @@ public class Main {
                     Session session = request.session();
                     session.attribute("username", username);
                     response.redirect("/");
+                    User user = selectUser(conn, username);
+                    if (user ==null){
+                        insertUser(conn, username );
+                    }
                     return "";
                 })
         );
@@ -82,14 +114,18 @@ public class Main {
         Spark.post(
                 "/create-plant",
                 ((request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("username");
+                    User user = selectUser(conn, username);
+
                     Plant plant = new Plant();
                     //plant.id = plants.size() + 1;
                     plant.type = request.queryParams("planttype");
                     plant.subtype = request.queryParams("plantsubtype");
-                    //String m = request.queryParams("maturity");
-                    //int mat = Integer.valueOf(m);
-                    //plant.maturity= request.queryParams("maturity");
-                    insertPlant(conn , plant.type , plant.subtype);
+                    String m = request.queryParams("maturity");
+                    int mat = Integer.valueOf(m);
+                    plant.maturity= mat;
+                    insertPlant(conn, user.id, plant.type , plant.subtype , plant.maturity);
                     response.redirect("/");
                     return "";
                 })

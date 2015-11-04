@@ -3,7 +3,7 @@
 Welcome, Green-Thumber {{username}}!
 <form action="create-plant" method="post">
     <input type="text" placeholder="Plant Type" name="planttype"/>
-    <select name="plantsubtype ">
+    <select name="plantsubtype">
         <option value="Tomato-Super 100">Tomato-Super 100</option>
         <option value="Tomato-Sun Gold">Tomato-Sun Gold</option>
         <option value="Tomato-Celebrity">Tomato-Celebrity</option>
@@ -20,9 +20,9 @@ Welcome, Green-Thumber {{username}}!
     <input type="number" placeholder="Plant #" name="plantid"/>
     <button type="submit">Delete</button>
 </form>
-<form action="edit-beer" method="post">
+<form action="edit-plant" method="post">
     <input type="number" placeholder="Plant #" name="plantid"/>
-    <input type="text" placeholder="Beer name" name="planttype"/>
+    <input type="text" placeholder="Plant type" name="planttype"/>
     <select name="plantsubtype">
         <option value="Tomato-Super 100">Tomato-Super 100</option>
         <option value="Tomato-Sun Gold">Tomato-Sun Gold</option>
@@ -33,7 +33,7 @@ Welcome, Green-Thumber {{username}}!
         <option value="Carrot-Atomic Red">Carrot-Atomic Red</option>
         <option value="Cauliflower-Cheddar">Cauliflower-Cheddar</option>
     </select>
-    <button type="submit">Edit</button>
+    <button type="submit">Edit plant</button>
 </form>
 {{#plants}}
 {{id}}. {{type}} - {{subtype}} - {{maturity}}<br>
