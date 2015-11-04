@@ -20,6 +20,21 @@ Welcome, Green-Thumber {{username}}!
     <input type="number" placeholder="Plant #" name="plantid"/>
     <button type="submit">Delete</button>
 </form>
+<form action="edit-beer" method="post">
+    <input type="number" placeholder="Plant #" name="plantid"/>
+    <input type="text" placeholder="Beer name" name="planttype"/>
+    <select name="plantsubtype">
+        <option value="Tomato-Super 100">Tomato-Super 100</option>
+        <option value="Tomato-Sun Gold">Tomato-Sun Gold</option>
+        <option value="Tomato-Celebrity">Tomato-Celebrity</option>
+        <option value="Cucumber-Marketmore">Cucumber-Marketmore</option>
+        <option value="Lettuce-Buttercrunch">Lettuce-Buttercrunch</option>
+        <option value="Lettuce-Arugula">Lettuce-Arugula</option>
+        <option value="Carrot-Atomic Red">Carrot-Atomic Red</option>
+        <option value="Cauliflower-Cheddar">Cauliflower-Cheddar</option>
+    </select>
+    <button type="submit">Edit</button>
+</form>
 {{#plants}}
 {{id}}. {{type}} - {{subtype}} - {{maturity}}<br>
 {{/plants}}
