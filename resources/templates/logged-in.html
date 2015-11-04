@@ -1,14 +1,8 @@
 <html>
 <body>
-Welcome, green-thumber {{username}}!
+Welcome, Green-Thumber {{username}}!
 <form action="create-plant" method="post">
-    <select name="planttype ">
-        <option value="Tomato">Tomato</option>
-        <option value="Cucumber">Cucumber</option>
-        <option value="Lettuce">Lettuce</option>
-        <option value="Carrot">Carrot</option>
-        <option value="Cauliflower">Cauliflower</option>
-    </select>
+    <input type="text" placeholder="Plant Type" name="planttype"/>
     <select name="plantsubtype ">
         <option value="Tomato-Super 100">Tomato-Super 100</option>
         <option value="Tomato-Sun Gold">Tomato-Sun Gold</option>
@@ -19,6 +13,15 @@ Welcome, green-thumber {{username}}!
         <option value="Carrot-Atomic Red">Carrot-Atomic Red</option>
         <option value="Cauliflower-Cheddar">Cauliflower-Cheddar</option>
     </select>
+    <input type="number" placeholder="Time to Maturity" name="maturity"/>
+    <button type="submit">Submit</button>
 </form>
+<form action="delete-plant" method="post">
+    <input type="number" placeholder="Plant #" name="plantid"/>
+    <button type="submit">Delete</button>
+</form>
+{{#plants}}
+{{id}}. {{type}} - {{subtype}} - {{maturity}}<br>
+{{/plants}}
 </body>
 </html>
